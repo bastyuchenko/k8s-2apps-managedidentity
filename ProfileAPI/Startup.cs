@@ -31,22 +31,25 @@ namespace ProfileAPI
                         .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
                         .AddInMemoryTokenCaches();
 
-            services.AddDbContext<ProfileContext>(opt => opt.UseInMemoryDatabase("Profile"));
+            
+            services.AddDbContext<ProfileContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("ProfileContext")));
 
             services.AddControllers();
 
             // Allowing CORS for all domains and methods for the purpose of sample
-            services.AddCors(o => o.AddPolicy("default", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader()
-                       .WithExposedHeaders("WWW-Authenticate");
-            }));
+            services.AddCors(options =>
+{
+   options.AddPolicy("AllowAllOrigins",
+           builder => 
+           builder.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ProfileContext dataContext)
         {
             if (env.IsDevelopment())
             {
@@ -61,9 +64,12 @@ namespace ProfileAPI
                 app.UseHsts();
             }
 
-            app.UseCors("default");
+            dataContext.Database.Migrate();
+
+            app.UseCors("AllowAllOrigins");
+
             app.UseHttpsRedirection();
-            app.UseRouting();
+            app.UseRouting(); 
 
             app.UseAuthentication();
             app.UseAuthorization();

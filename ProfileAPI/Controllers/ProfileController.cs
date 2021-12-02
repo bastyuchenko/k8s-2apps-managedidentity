@@ -16,12 +16,14 @@ using Microsoft.Graph;
 using ProfileAPI.Models;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Cors;
 
 namespace ProfileAPI.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
+   // [EnableCors("AllowAllOrigins")] 
     public class ProfileController : ControllerBase
     {
         /// <summary>
@@ -49,7 +51,16 @@ namespace ProfileAPI.Controllers
         {
             HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
 
-            var profileItem = await _context.ProfileItems.FindAsync(id);
+            ProfileItem profileItem = null;
+            try
+            {
+                profileItem = await _context.ProfileItems.FindAsync(id);     
+            }
+            catch (System.Exception)
+            {
+            
+            }
+            
 
             if (profileItem == null)
             {
