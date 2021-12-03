@@ -353,5 +353,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-ProfileAPI/appsettings.json
-ProfileSPA/src/utils/authConfig.js
+
+# env vars
+ProfileSPA/.env.production
+ProfileSPA/.env
+ProfileSPA/.env.development

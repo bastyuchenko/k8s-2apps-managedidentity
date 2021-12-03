@@ -26,27 +26,28 @@ namespace ProfileAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration)
+            // .AddAzureADBearer(options => Configuration.Bind("AzureAd", options))
+                .AddMicrosoftIdentityWebApi(Configuration, "ProfileAPIAzureAd")
                     .EnableTokenAcquisitionToCallDownstreamApi()
                         .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
                         .AddInMemoryTokenCaches();
 
             
             services.AddDbContext<ProfileContext>(options =>
-    options.UseSqlServer(Configuration.GetConnectionString("ProfileContext")));
+            options.UseSqlServer(Configuration.GetConnectionString("ProfileContext")));
 
             services.AddControllers();
 
             // Allowing CORS for all domains and methods for the purpose of sample
             services.AddCors(options =>
-{
-   options.AddPolicy("AllowAllOrigins",
-           builder => 
-           builder.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod());
-            });
-        }
+            {
+                options.AddPolicy("AllowAllOrigins",
+                        builder => 
+                        builder.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod());
+                            });
+            }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ProfileContext dataContext)

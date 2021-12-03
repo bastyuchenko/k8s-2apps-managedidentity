@@ -52,15 +52,7 @@ namespace ProfileAPI.Controllers
             HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
 
             ProfileItem profileItem = null;
-            try
-            {
-                profileItem = await _context.ProfileItems.FindAsync(id);     
-            }
-            catch (System.Exception)
-            {
-            
-            }
-            
+            profileItem = await _context.ProfileItems.FindAsync(id);                 
 
             if (profileItem == null)
             {

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <UserSecretsId>aspnet-ProfileAPI-03230DB1-5145-408C-A48B-BE3DAFC56C30</UserSecretsId>
     <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
+    <UserSecretsId>dfc8ff81-bfcb-4463-addf-038e4d3039b0</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
