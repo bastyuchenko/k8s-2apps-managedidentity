@@ -21,16 +21,15 @@ using Microsoft.AspNetCore.Cors;
 namespace ProfileAPI.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
-   // [EnableCors("AllowAllOrigins")] 
+    [Route("api/[controller]")]
+    [RequiredScope(RequiredScopesConfigurationKey = "ProfileAPIAzureAd:Scopes")]
     public class ProfileController : ControllerBase
     {
         /// <summary>
         /// The Web API will only accept tokens 1) for users, and 
         /// 2) having the access_as_user scope for this API
         /// </summary>
-        static readonly string[] scopeRequiredByApi = new string[] { "access_as_user" };
 
         private readonly ProfileContext _context;
         private readonly ITokenAcquisition _tokenAcquisition;
@@ -49,8 +48,6 @@ namespace ProfileAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ProfileItem>> GetProfileItem(string id)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
-
             ProfileItem profileItem = null;
             profileItem = await _context.ProfileItems.FindAsync(id);                 
 
@@ -66,8 +63,6 @@ namespace ProfileAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<ProfileItem>> PostProfileItem(ProfileItem profileItem)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
-
             profileItem.FirstLogin = false;
 
             // This is a synchronous call, so that the clients know, when they call Get, that the 
@@ -94,7 +89,7 @@ namespace ProfileAPI.Controllers
             {
                 if (ex.InnerException is MicrosoftIdentityWebChallengeUserException challengeException)
                 {
-                    await _tokenAcquisition.ReplyForbiddenWithWwwAuthenticateHeaderAsync(_graphOptions.Value.Scopes.Split(' '),
+                    _tokenAcquisition.ReplyForbiddenWithWwwAuthenticateHeader(_graphOptions.Value.Scopes.Split(' '),
                         challengeException.MsalUiRequiredException);
                     HttpContext.Response.ContentType = "application/json";
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -122,8 +117,6 @@ namespace ProfileAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProfileItem(string id, ProfileItem profileItem)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
-
             if (id != profileItem.Id)
             {
                 return BadRequest();
