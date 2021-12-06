@@ -1,23 +1,8 @@
-# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
-
-version: '3.4'
+version: "3.4"
 
 services:
   profileapi:
-    image: profileapi
+    image: ${DOCKER_REGISTRY-}profileapi
     build:
       context: ProfileAPI/.
       dockerfile: Dockerfile
-    ports:
-      - 8001:443
-      - 8000:80
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=8001
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=crypticpassword
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/ProfileAPI.pfx
-      - USER_SECRETS_ID=dfc8ff81-bfcb-4463-addf-038e4d3039b0
-    volumes:
-      - ~/.aspnet/https:/https/:ro
-      - /home/abastiuchenko/.microsoft/usersecrets/dfc8ff81-bfcb-4463-addf-038e4d3039b0:/home/appuser/.microsoft/usersecrets/dfc8ff81-bfcb-4463-addf-038e4d3039b0

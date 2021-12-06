@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using ProfileAPI.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,9 @@ builder.Services.AddDbContext<ProfileContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("ProfileContext")));
 
 builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
             {
@@ -39,6 +41,8 @@ if (app.Environment.IsDevelopment())
     // For debugging/development purposes, one can enable additional detail in exceptions by setting IdentityModelEventSource.ShowPII to true.
     // Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {

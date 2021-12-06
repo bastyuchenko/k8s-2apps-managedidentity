@@ -13,10 +13,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.21.0" />
-    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="1.21.0" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.21.1" />
+    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="1.21.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
 </Project>
