@@ -18,6 +18,6 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=crypticpassword 
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/ProfileAPI.pfx 
     volumes:
-      - ~/.aspnet/https:/https/:ro
-      - ~/.vsdbg:/remote_debugger:rw
+      - $HOME/.aspnet/https:/https/:ro
+      - $HOME/.vsdbg:/remote_debugger:rw
     restart: always

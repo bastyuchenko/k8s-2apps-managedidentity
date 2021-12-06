@@ -16,7 +16,7 @@ const isIE = () => {
 };
 
 // If you support IE, our recommendation is that you sign-in using Redirect flow
-const useRedirectFlow = isIE();
+const useRedirectFlow = true; //isIE();
 
 const msalApp = new PublicClientApplication(msalConfig);
 
