@@ -19,12 +19,19 @@ spec:
         - name: profileapi
           image: abastiuchenkoazcontainerregistry.azurecr.io/profileapi:v1
           imagePullPolicy: IfNotPresent
+          resources:
+            requests: # Minimum amount of resources requested
+              cpu: 100m
+              memory: 128Mi
+            limits: # Maximum amount of resources requested
+              cpu: 250m
+              memory: 256Mi
           ports:
-            - containerPort: 80
+            - containerPort: 44351
               protocol: TCP
           env:
             - name: ASPNETCORE_URLS
-              value: http://+:80
+              value: https://+:44351
 ---
 apiVersion: v1
 kind: Service
@@ -34,9 +41,10 @@ metadata:
     app: azure-user-profile
     service: profileapi
 spec:
+  type: LoadBalancer
   ports:
-    - port: 80
-      targetPort: 80
+    - port: 44351
+      targetPort: 44351
       protocol: TCP
   selector:
     service: profileapi
