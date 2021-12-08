@@ -6,18 +6,12 @@ services:
   profileapi:
     image: profileapi
     build:
-      context: ProfileAPI/.
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ProfileAPI/Dockerfile
     ports:
-      - 8001:443
-      - 8000:80
+      - 7263:7263
+      - 5263:5263
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS="https://+;http://+"
-      - ASPNETCORE_HTTPS_PORT=8001
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=crypticpassword 
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/ProfileAPI.pfx 
     volumes:
-      - $HOME/.aspnet/https:/https/:ro
-      - $HOME/.vsdbg:/remote_debugger:rw
-    restart: always
+      - ~/.vsdbg:/remote_debugger:rw

@@ -5,12 +5,12 @@ version: '3.4'
 services:
   profileapi:
     ports:
-      - 8001:443
-      - 8000:80
+      - 5263:5263
+      - 7263:7263
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=8001
+      - ASPNETCORE_URLS=https://+:7263;http://+:5263
+      - ASPNETCORE_HTTPS_PORT=7263
       - ASPNETCORE_Kestrel__Certificates__Default__Password=crypticpassword
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/ProfileAPI.pfx
     volumes:

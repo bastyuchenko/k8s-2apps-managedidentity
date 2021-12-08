@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: profileapi
-          image: abastiuchenkoazcontainerregistry.azurecr.io/profileapi:v1
-          imagePullPolicy: IfNotPresent
+          image: abastiuchenkoazcontainerregistry.azurecr.io/profileapi
+          imagePullPolicy: Always
           resources:
             requests: # Minimum amount of resources requested
               cpu: 100m
@@ -27,11 +27,11 @@ spec:
               cpu: 250m
               memory: 256Mi
           ports:
-            - containerPort: 44351
+            - containerPort: 5263
               protocol: TCP
           env:
             - name: ASPNETCORE_URLS
-              value: https://+:44351
+              value: http://+:5263
 ---
 apiVersion: v1
 kind: Service
@@ -43,8 +43,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 44351
-      targetPort: 44351
+    - port: 5263
+      targetPort: 5263
       protocol: TCP
   selector:
     service: profileapi
