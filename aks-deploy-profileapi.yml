@@ -32,6 +32,13 @@ spec:
           env:
             - name: ASPNETCORE_URLS
               value: http://+:5263
+      volumes:
+        - name: secrets-store01-inline
+          csi: 
+              driver: secrets-store.csi.k8s.io
+              readOnly: true
+              volumeAttributes:
+                secretProviderClass: "azure-kvname-user-msi"
 ---
 apiVersion: v1
 kind: Service
@@ -48,3 +55,23 @@ spec:
       protocol: TCP
   selector:
     service: profileapi
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-kvname-user-msi
+spec:
+  provider: azure
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "true"          # Set to true for using managed identity
+    userAssignedIdentityID: a0b5a2d2-83a7-4bdb-b8de-a73ebe62b414   # Set the clientID of the user-assigned managed identity to use
+    keyvaultName: ABastiuchenkoK8sKeyVault        # Set to the name of your key vault
+    cloudName: ""                         # [OPTIONAL for Azure] if not provided, the Azure environment defaults to AzurePublicCloud
+    objects:  |
+      array:
+        - |
+          objectName: secret1
+          objectType: secret              # object types: secret, key, or cert
+          objectVersion: ""               # [OPTIONAL] object versions, default to latest if empe6b21ef4-3305-49e5-9e8d-9dd1332701e9
+    tenantId: b41b72d0-4e9f-4c26-8a69-f949f367c91d                # The tenant ID of the key vault
