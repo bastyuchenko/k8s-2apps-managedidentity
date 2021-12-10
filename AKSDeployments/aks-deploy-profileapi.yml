@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profileapi
+  labels:
+    app: azure-user-profile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: profileapi
+  template:
+    metadata:
+      labels:
+        app: azure-user-profile
+        service: profileapi
+    spec:
+      containers:
+        - name: profileapi
+          image: abastiuchenkoazcontainerregistry.azurecr.io/profileapi
+          imagePullPolicy: Always
+          resources:
+            requests: # Minimum amount of resources requested
+              cpu: 100m
+              memory: 128Mi
+            limits: # Maximum amount of resources requested
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 5263
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:5263
+      volumes:
+        - name: secrets-store01-inline
+          csi: 
+              driver: secrets-store.csi.k8s.io
+              readOnly: true
+              volumeAttributes:
+                secretProviderClass: "azure-kvname-user-msi"
