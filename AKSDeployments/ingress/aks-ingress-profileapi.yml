@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: contoso-website
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing # Use the HTTP application routing add-on
+rules: # ingress rules
+  # <zone-name> will be retrived from the 'ZoneName' value of the script below result
+  # az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME -o tsv --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName
+  - host: contoso.<zone-name> # Which host is allowed to enter the cluster. A FQDN that describes the host where that rule should be applied
+    http:
+      paths:
+        - backend: # How the ingress will handle the requests
+            service:
+              name: profileapi # Which service the request will be forwarded to
+              port:
+                name: 80 # Which port in that service
+          path: / # Which path is this rule referring to
+          pathType: Prefix # See more at https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types

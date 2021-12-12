@@ -22,14 +22,14 @@ az acr create --name $AZURE_CONTAINER_REGISTRY --resource-group $RESOURCE_GROUP 
 
 # create AKS cluster
 ## Option 1 (Recommended)
-az aks create \
-    --resource-group $RESOURCE_GROUP \
-    --name $CLUSTER_NAME \
-    --node-count 1 \
-    --enable-addons http_application_routing \
-    --generate-ssh-keys \
-    --node-vm-size Standard_B2s \
-    --network-plugin azure
+# az aks create \
+#    --resource-group $RESOURCE_GROUP \
+#    --name $CLUSTER_NAME \
+#    --node-count 1 \
+#    --enable-addons http_application_routing \
+#    --generate-ssh-keys \
+#    --node-vm-size Standard_B2s \
+#    --network-plugin azure
 
 ## OR Option 2 
 az aks create \
@@ -81,3 +81,26 @@ az keyvault create --name $KEY_VAULT_NAME --resource-group $RESOURCE_GROUP --loc
 
 # Add secrets to Az Key vault
 az keyvault secret set --vault-name $KEY_VAULT_NAME --name "" --value ""
+
+
+## Open access to key-vault through the managed identity
+
+# AKS cluster must be created (or updated existing) with --enable-addons azure-keyvault-secrets-provider parameter like an example below
+# az aks create -n myAKSCluster -g myResourceGroup --enable-addons azure-keyvault-secrets-provider --enable-managed-identity
+# A user-assigned managed identity, named azurekeyvaultsecretsprovider-*, will be created. All futher configuration to open access to KeyVault will be applied to this user-assigned managed identity
+# In most cases there is one more a user-assigned managed identity named *agentpool that is usualy used for access to AzContainerRegistry.
+
+# set policy to access secrets in your key vault using KV name and client id of the user-assigned managed identity, named azurekeyvaultsecretsprovider-*
+az keyvault set-policy -n $KEY_VAULT_NAME --secret-permissions get --spn <azurekeyvaultsecretsprovider-managed-identity-identity-client-id>
+
+# Create the YAML script with a SecretProviderClass, using your own values for 
+# -'userAssignedManagedIdentityID', named azurekeyvaultsecretsprovider-*
+# -'keyvaultName'
+# -'tenantId'
+# and 'objects' to retrieve from your key vault
+
+# Apply the SecretProviderClass to your cluster
+kubectl apply -f aks-secret-provider-class-profileapi.yml
+
+# change pod configuration in deployment YAML script
+kubectl apply -f aks-deploy-profileapi.yml

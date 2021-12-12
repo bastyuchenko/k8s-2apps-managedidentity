@@ -8,8 +8,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 5263
-      targetPort: 5263
-      protocol: TCP
-  selector:
-    service: profileapi
+    - port: 5263 # This port is the inbound port for your application. All the requests come to this port from where the service forwards the requests to the resource.
+      targetPort: 5263 # This value identifies the port on the target resource on which incoming requests are received. 
+      protocol: TCP # This value identifies the network protocol for which the service will forward network data.
+  selector: # The target resource. This value selects all the resources with a given label onto a single IP address.
+    service: profileapi 
