@@ -29,7 +29,7 @@ else
 
     secretClient = new SecretClient(
                         keyVaultEndpoint,
-                        new DefaultAzureCredential(new DefaultAzureCredentialOptions{ ManagedIdentityClientId = "a0b5a2d2-83a7-4bdb-b8de-a73ebe62b414"}));
+                        new DefaultAzureCredential(new DefaultAzureCredentialOptions{ ManagedIdentityClientId = "d99db389-d1b4-4f95-93fd-d5e67d10a97f"}));
 
     builder.Configuration.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
 }

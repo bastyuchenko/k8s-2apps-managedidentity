@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: profileapi # This will be the name of the deployment. All Kubernetes resources must have a name.
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules: # ingress rules
+    # 'host' value = <your-own-prefix>.<zone-name>. zone-name will be retrived from the 'ZoneName' value of the script below result
+    # az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME -o tsv --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName
+    - host: profileapi.91e6a38847fa4321b64d.eastus.aksapp.io # Which host is allowed to enter the cluster. A FQDN that describes the host where that rule should be applied
+      http:
+        paths:
+          - backend: # How the ingress will handle the requests
+              service:
+                name: profileapi # Which service the request will be forwarded to
+                port:
+                  name: http # Which port in that service
+            path: / # Which path is this rule referring to
+            pathType: Prefix # See more at https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types

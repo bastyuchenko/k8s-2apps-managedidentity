@@ -1,0 +1,40 @@
+apiVersion: apps/v1 # The apiVersion key defines the API server endpoint that manages the object you'll deploy.
+kind: Deployment # The kind key defines the workload this deployment will create.
+metadata:
+  name: profileapi # This will be the name of the deployment. All Kubernetes resources must have a name.
+  labels:
+    app: azure-user-profile
+spec:
+  replicas: 1 # count of pods as replicas
+  selector:  # Define the wrapping strategy
+    matchLabels:  # Match all pods with the defined labels. Use the matchLabels key to list the labels for all the pods managed by the deployment.
+      app: azure-user-profile # Labels follow the `name: value` template
+  template: # This is the template of the pod inside the deployment
+    metadata: # Metadata for the pod; Pods don't have given names when they're created inside deployments. The pod's name will be the deployment's name with a random ID added to the end.
+      labels: # You add the labels key to allow deployments to find and group pods.
+        app: azure-user-profile
+    spec: # pods have a specification section that allows you to define the containers inside that pod.
+      containers: #  Here we define all containers. The containers key is an array of container specifications because a pod can have one or more containers.
+        - name: profileapi # All running pods will follow the name profileapi-<UUID>, where UUID is a generated ID to identify all resources uniquely.
+          image: abastiuchenkoazcontainerregistry.azurecr.io/profileapi
+          imagePullPolicy: Always
+          resources:
+            requests: # Minimum amount of resources requested
+              cpu: 100m
+              memory: 128Mi
+            limits: # Maximum amount of resources requested
+              cpu: 250m
+              memory: 256Mi
+          ports: # define the ports this container will expose externally through the ports key. The ports key is an array of objects, which means that a container in a pod can expose multiple ports with multiple names.
+            - containerPort: 5263 # This container exposes port 80
+              name: http
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:5263
+      volumes:
+        - name: secrets-store01-inline
+          csi: 
+              driver: secrets-store.csi.k8s.io
+              readOnly: true
+              volumeAttributes:
+                secretProviderClass: "azure-kvname-user-msi"
