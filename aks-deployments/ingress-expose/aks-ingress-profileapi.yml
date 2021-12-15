@@ -8,7 +8,7 @@ spec:
   rules: # ingress rules
     # 'host' value = <your-own-prefix>.<zone-name>. zone-name will be retrived from the 'ZoneName' value of the script below result
     # az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME -o tsv --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName
-    - host: profileapi.91e6a38847fa4321b64d.eastus.aksapp.io # Which host is allowed to enter the cluster. A FQDN that describes the host where that rule should be applied
+    - host: profileapi.2d551c4972034083b1c3.eastus.aksapp.io # Which host is allowed to enter the cluster. A FQDN that describes the host where that rule should be applied
       http:
         paths:
           - backend: # How the ingress will handle the requests

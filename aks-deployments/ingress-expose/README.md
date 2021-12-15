@@ -67,7 +67,7 @@ az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
 az keyvault create --name $KEY_VAULT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION
 
 # Add secrets to Az Key vault
-az keyvault secret set --vault-name $KEY_VAULT_NAME --name "" --value ""
+az keyvault secret set --vault-name $KEY_VAULT_NAME --name "ConnectionStrings--ProfileContext" --value "blablabla"
 
 
 ## Open access to key-vault through the managed identity
@@ -90,15 +90,16 @@ az keyvault set-policy -n $KEY_VAULT_NAME --secret-permissions get list --spn <a
 
 # Apply deployment and service to cluster
 # kubectl delete pods -l app=azure-user-profile
-kubectl apply -f aks-deploy-profileapi.yml --force
+replace manage-identity-client-id
+kubectl apply -f aks-deployment-profileapi.yml --force
+kubectl apply -f aks-secretproviderclass-profileapi.yml --force
 kubectl apply -f aks-service-profileapi.yml --force
-kubectl apply -f aks-secret-provider-class-profileapi.yml --force
 kubectl apply -f aks-ingress-profileapi.yml --force
 
 kubectl get all
 
-# Apply the SecretProviderClass to your cluster
-kubectl apply -f aks-secret-provider-class-profileapi.yml
+kubectl describe ing
 
-# change pod configuration in deployment YAML script
-kubectl apply -f aks-deploy-profileapi.yml
+# If the Address does not appear in prev command result - try apply yml below again
+kubectl apply -f aks-service-profileapi.yml --force
+kubectl apply -f aks-ingress-profileapi.yml --force

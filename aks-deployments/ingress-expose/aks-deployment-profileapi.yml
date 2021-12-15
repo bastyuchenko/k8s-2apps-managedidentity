@@ -31,6 +31,8 @@ spec:
           env:
             - name: ASPNETCORE_URLS
               value: http://+:5263
+            - name: MANAGEDIDENTITYCLIENTID
+              value: "11e4bf0b-4537-48f3-8fa1-588f2e19f4a9"
       volumes:
         - name: secrets-store01-inline
           csi: 

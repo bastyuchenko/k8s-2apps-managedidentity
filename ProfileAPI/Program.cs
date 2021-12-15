@@ -26,10 +26,9 @@ if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development
 }
 else
 {
-
     secretClient = new SecretClient(
                         keyVaultEndpoint,
-                        new DefaultAzureCredential(new DefaultAzureCredentialOptions{ ManagedIdentityClientId = "d99db389-d1b4-4f95-93fd-d5e67d10a97f"}));
+                        new DefaultAzureCredential(new DefaultAzureCredentialOptions{ ManagedIdentityClientId = Environment.GetEnvironmentVariable("MANAGEDIDENTITYCLIENTID")})); // MANAGEDIDENTITYCLIENTID value will be specified in deployment script
 
     builder.Configuration.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
 }
